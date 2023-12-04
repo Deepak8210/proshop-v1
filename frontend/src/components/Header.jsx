@@ -17,6 +17,7 @@ const Header = () => {
     try {
       await logoutApiCall().unwrap();
       dispatch(logout());
+      setDropdownVisible(false);
       navigate("/login");
     } catch (error) {
       console.log(error);
@@ -59,7 +60,10 @@ const Header = () => {
                       {isDropdownVisible && (
                         <div className="absolute border-2 rounded-md top-10 right-0 bg-white z-50">
                           <div
-                            onClick={() => navigate("/profile")}
+                            onClick={() => {
+                              navigate("/profile");
+                              setDropdownVisible(false);
+                            }}
                             className="cursor-pointer hover:bg-slate-200 px-1"
                           >
                             Profile
