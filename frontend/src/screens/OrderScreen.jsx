@@ -8,6 +8,7 @@ import {
   useGetOrderDetailsQuery,
   usePayOrderMutation,
   useGetPayPalClientIdQuery,
+  useDeliverOrderMutation,
 } from "../redux/slices/orderApiSlice";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 
@@ -21,6 +22,9 @@ const OrderScreen = () => {
   } = useGetOrderDetailsQuery(orderId);
 
   const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
+
+  const [deliverOrder, { isLoading: loadingDeliver }] =
+    useDeliverOrderMutation();
 
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
 
@@ -89,6 +93,17 @@ const OrderScreen = () => {
       });
   }
 
+  const deliverOrderHandler = async () => {
+    try {
+      await deliverOrder(orderId);
+      refetch();
+      toast.success("Order Delivered");
+      console.log();
+    } catch (err) {
+      toast.error(err?.data?.message || err.message);
+    }
+  };
+
   return isLoading ? (
     <Loader />
   ) : isError ? (
@@ -117,11 +132,11 @@ const OrderScreen = () => {
             {order.shippingAddress.pinCode}, {order.shippingAddress.country}
           </p>
           {order.isDelivered ? (
-            <div className="border py-2 px-1 rounded-[0.3rem] mt-2 bg-green-200 text-green-500">
-              delivered
+            <div className="border py-2 px-3 rounded-[0.3rem] mt-2 bg-green-200 text-green-500">
+              Delivered on {order.deliveredAt}
             </div>
           ) : (
-            <div className="border py-2 px-2 rounded-[0.3rem] mt-2 bg-red-200 text-red-500">
+            <div className="border py-2 px-3 rounded-[0.3rem] mt-2 bg-red-200 text-red-500">
               not delivered
             </div>
           )}
@@ -134,11 +149,11 @@ const OrderScreen = () => {
             {order.paymentMethod}
           </p>
           {order.isPaid ? (
-            <div className="border py-2 px-1 rounded-[0.3rem] mt-2 bg-green-200 text-green-500">
+            <div className="border py-2 px-3 rounded-[0.3rem] mt-2 bg-green-200 text-green-500">
               Paid on {order.paidAt}
             </div>
           ) : (
-            <div className="border py-2 px-2 rounded-[0.3rem] mt-2 bg-red-200 text-red-500">
+            <div className="border py-2 px-3 rounded-[0.3rem] mt-2 bg-red-200 text-red-500">
               not Paid
             </div>
           )}
@@ -205,7 +220,6 @@ const OrderScreen = () => {
               <span>${order.totalPrice}</span>
             </div>
             <hr className="h-[1.5px] bg-gray-400 my-4" />
-
             {!order.isPaid && (
               <div className="w-full h-40">
                 {loadingPay && <Loader />}
@@ -230,6 +244,21 @@ const OrderScreen = () => {
                 )}
               </div>
             )}
+
+            {loadingDeliver && <Loader />}
+            {userInfo &&
+              userInfo.isAdmin &&
+              order.isPaid &&
+              !order.isDelivered && (
+                <div className="mb-2">
+                  <button
+                    onClick={deliverOrderHandler}
+                    className="bg-slate-700 text-white rounded-[0.3rem] p-2 mb-2 active:scale-95 duration-200 shadow-md"
+                  >
+                    Mark as Delivered
+                  </button>
+                </div>
+              )}
           </div>
         </div>
       </div>

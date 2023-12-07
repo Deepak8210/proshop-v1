@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import brandImg from "/brand.png";
-import { FaShoppingCart, FaUser, FaChevronDown } from "react-icons/fa";
+import { FaShoppingCart, FaUser, FaCaretDown } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useLogoutMutation } from "../redux/slices/usersApiSlice";
 import { logout } from "../redux/slices/authSlice";
+
 const Header = () => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
+  const [isAdminVisible, setAdminVisible] = useState(false);
   const cartItems = useSelector((state) => state.cart.cartItems);
   const { userInfo } = useSelector((state) => state.auth);
   const navigate = useNavigate();
@@ -52,24 +54,29 @@ const Header = () => {
                   </Link>
                   {userInfo ? (
                     <div className=" relative flex items-center">
-                      <h6 className="text-white mr-1">{userInfo.name}</h6>
-                      <FaChevronDown
-                        className="text-white"
+                      <button
+                        htmlFor="drop"
+                        className="text-white mr-1 flex items-center"
                         onClick={() => setDropdownVisible(!isDropdownVisible)}
-                      />
+                      >
+                        {userInfo.name}{" "}
+                        <FaCaretDown id="drop" className="text-white" />
+                      </button>
+
                       {isDropdownVisible && (
-                        <div className="absolute border-2 rounded-md top-10 right-0 bg-white z-50">
+                        <div className="absolute border-2 rounded-[0.2rem] top-10 right-0 bg-white z-50">
                           <div
                             onClick={() => {
                               navigate("/profile");
                               setDropdownVisible(false);
                             }}
-                            className="cursor-pointer hover:bg-slate-200 px-1"
+                            className="cursor-pointer hover:bg-slate-200 px-3 text-sm"
                           >
                             Profile
                           </div>
+                          <hr />
                           <div
-                            className="cursor-pointer hover:bg-slate-200 px-1"
+                            className="cursor-pointer hover:bg-slate-200 px-3 text-sm"
                             onClick={logoutHandler}
                           >
                             Logout
@@ -85,6 +92,55 @@ const Header = () => {
                       <FaUser />
                       Sign In
                     </Link>
+                  )}
+
+                  {userInfo && userInfo.isAdmin ? (
+                    <div className=" relative flex items-center">
+                      <button
+                        onClick={() => setAdminVisible(!isAdminVisible)}
+                        htmlFor="drop"
+                        className="text-white mr-1 flex items-center"
+                      >
+                        Admin
+                        <FaCaretDown id="drop" className="text-white" />
+                      </button>
+
+                      {isAdminVisible && (
+                        <div className="absolute border-2 rounded-[0.2rem] top-10 right-0 bg-white z-50">
+                          <div
+                            onClick={() => {
+                              navigate("/admin/productlist");
+                              setAdminVisible(false);
+                            }}
+                            className="cursor-pointer hover:bg-slate-200 px-3 text-sm"
+                          >
+                            Products
+                          </div>
+                          <hr />
+                          <div
+                            onClick={() => {
+                              navigate("/admin/orderlist");
+                              setAdminVisible(false);
+                            }}
+                            className="cursor-pointer hover:bg-slate-200 px-3 text-sm"
+                          >
+                            Users
+                          </div>
+                          <hr />
+                          <div
+                            onClick={() => {
+                              navigate("/admin/orderlist");
+                              setAdminVisible(false);
+                            }}
+                            className="cursor-pointer hover:bg-slate-200 px-3 text-sm"
+                          >
+                            Orders
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    ""
                   )}
                 </div>
               </div>
