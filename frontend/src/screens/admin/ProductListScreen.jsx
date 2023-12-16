@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import {
   useCreateProductMutation,
   useGetProductsQuery,
+  useDeleteProductMutation,
 } from "../../redux/slices/productApiSlice";
 import { Link } from "react-router-dom";
 
@@ -14,8 +15,19 @@ const ProductListScreen = () => {
   const [createProduct, { isLoading: loadingCreate }] =
     useCreateProductMutation();
 
-  const deleteHandler = (id) => {
-    console.log(id);
+  const [deleteProduct, { isLoading: loadingDelete }] =
+    useDeleteProductMutation();
+  const deleteHandler = async (id) => {
+    if (window.confirm("Are you sure?")) {
+      try {
+        await deleteProduct(id);
+        toast.success("Product deleted");
+        refetch();
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    } else {
+    }
   };
   const createProductHandler = async () => {
     if (window.confirm("Are you sure you want to create a new product?")) {
@@ -42,6 +54,7 @@ const ProductListScreen = () => {
           Create Product
         </button>
       </div>
+      {loadingDelete && <Loader />}
       {loadingCreate && <Loader />}
       {isLoading ? (
         <Loader />
@@ -55,8 +68,8 @@ const ProductListScreen = () => {
             <table className="w-full text-sm text-slate-600">
               <thead>
                 <tr>
-                  <th className="">ID</th>
-                  <th className="">NAME</th>
+                  <th>ID</th>
+                  <th>NAME</th>
                   <th>PRICE</th>
                   <th>CATEGORY</th>
                   <th>BRAND</th>
@@ -64,9 +77,11 @@ const ProductListScreen = () => {
                 </tr>
               </thead>
               <tbody>
-                {products.map((product) => (
+                {products.map((product, index) => (
                   <tr
-                    className="text-center border-y-2 hover:bg-slate-200"
+                    className={`${
+                      index % 2 === 0 ? "bg-white" : "bg-gray-100"
+                    }`}
                     key={product._id}
                   >
                     <td className="">{product._id}</td>
@@ -94,9 +109,11 @@ const ProductListScreen = () => {
             </table>
           </div>
 
-          {products.map((product) => (
+          {products.map((product, index) => (
             <div
-              className="md:hidden border rounded-[0.2rem] text-sm p-1 my-1"
+              className={`md:hidden border rounded-[0.2rem] text-sm p-1 my-1 ${
+                index % 2 === 0 ? "bg-white" : "bg-gray-100"
+              }`}
               key={product._id}
             >
               <div className="w-full  flex">

@@ -1,14 +1,21 @@
 import { useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, Form } from "react-router-dom";
 import Ratings from "../components/Ratings";
-import { useGetProductDetailsQuery } from "../redux/slices/productApiSlice";
+import {
+  useGetProductDetailsQuery,
+  useCreateReviewMutation,
+} from "../redux/slices/productApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import { toast } from "react-toastify";
+
 import { addToCart } from "../redux/slices/cartSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const ProductScreen = () => {
   const [qty, setQty] = useState(1);
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
 
   const { id: productId } = useParams();
   const dispatch = useDispatch();
@@ -16,8 +23,33 @@ const ProductScreen = () => {
   const {
     data: product,
     isLoading,
+    refetch,
     isError,
   } = useGetProductDetailsQuery(productId);
+
+  const [createReview, { isLoading: loadingProductReview }] =
+    useCreateReviewMutation();
+
+  const { userInfo } = useSelector((state) => state.auth);
+
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      await createReview({
+        productId,
+        rating,
+        comment,
+      }).unwrap();
+      refetch();
+      toast.success("Review submitted");
+      setRating(0);
+      setComment("");
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
+      setRating(0);
+      setComment("");
+    }
+  };
 
   return (
     <>
@@ -102,6 +134,86 @@ const ProductScreen = () => {
                     </button>
                   </div>
                 </div>
+              </div>
+            </div>
+            <div className=" w-full col-span-2">
+              <h2 className="font-semibold text-xl text-slate-500">Reviews</h2>
+              {product.reviews.length === 0 && (
+                <div className="bg-blue-200 border-blue-200 border p-2 rounded-[0.2rem] mt-1">
+                  <h3 className="text-blue-400">No reviews</h3>
+                </div>
+              )}
+              <div>
+                {product.reviews.map((review) => (
+                  <div key={review._id}>
+                    <strong>{review.name}</strong>
+                    <Ratings value={review.rating} />
+                    <p>{review.createdAt.substring(0, 10)}</p>
+                    <p>{review.comment}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-2 ">
+                <h2 className="font-[500] text-xl text-slate-400 bg-slate-200 p-1 rounded-[0.2rem] mt-4">
+                  Write a Customer Review
+                </h2>
+                {loadingProductReview && <Loader />}
+                {userInfo ? (
+                  <div>
+                    <form
+                      onSubmit={onSubmitHandler}
+                      method="post"
+                      className="flex flex-col"
+                    >
+                      <label htmlFor="rating" className=" text-slate-400 mt-2">
+                        Rating
+                      </label>
+                      <select
+                        className="border outline-none rounded-[0.2rem]  p-1"
+                        name="rating"
+                        id="rating"
+                        value={rating}
+                        onChange={(e) => setRating(Number(e.target.value))}
+                      >
+                        <option value="">Select...</option>
+                        <option value="1">1 - Poor</option>
+                        <option value="2">2 - Fair</option>
+                        <option value="3">3 - Good</option>
+                        <option value="4">4 - Very Good</option>
+                        <option value="5">5 - Excellent</option>
+                      </select>
+                      <label htmlFor="comment" className=" text-slate-400 mt-2">
+                        Comment
+                      </label>
+                      <textarea
+                        className="border outline-none rounded-[0.2rem] p-1 text-sm"
+                        name="comment"
+                        id="comment"
+                        cols="30"
+                        rows="3"
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                      ></textarea>
+                      <button
+                        disabled={loadingProductReview}
+                        type="submit"
+                        className="p-2 bg-slate-700 text-white mt-2 rounded-[0.2rem] active:scale-95 duration-200 shadow-md"
+                      >
+                        Submit
+                      </button>
+                    </form>
+                  </div>
+                ) : (
+                  <div className="bg-blue-200 border-blue-200 border p-2 rounded-[0.2rem] mt-1">
+                    <h3 className="text-blue-400">
+                      Please{" "}
+                      <Link to={"/login"} className="text-purple-700 underline">
+                        sign in
+                      </Link>{" "}
+                      to write a review{" "}
+                    </h3>
+                  </div>
+                )}
               </div>
             </div>
           </div>

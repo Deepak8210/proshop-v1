@@ -32,12 +32,12 @@ const Header = () => {
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
             <div className="flex flex-1 items-center justify-between">
-              <div className="flex flex-shrink-0 items-center">
+              <Link to={"/"} className="flex flex-shrink-0 items-center">
                 <img className="h-8 w-auto" src={brandImg} alt="ProShop" />
                 <span className="text-lg text-white font-semibold">
                   ProShop
                 </span>
-              </div>
+              </Link>
               <div className=" sm:ml-6">
                 <div className="flex space-x-4">
                   <Link

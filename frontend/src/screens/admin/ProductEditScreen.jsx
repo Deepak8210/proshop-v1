@@ -6,8 +6,8 @@ import { toast } from "react-toastify";
 import {
   useUpdateProductMutation,
   useGetProductDetailsQuery,
+  useUploadProductImageMutation,
 } from "../../redux/slices/productApiSlice";
-import Product from "../../../../backend/models/productModel";
 
 const ProductEditScreen = () => {
   const { id: productId } = useParams();
@@ -32,6 +32,9 @@ const ProductEditScreen = () => {
   const [updateProduct, { isLoading: loadingUpdate }] =
     useUpdateProductMutation();
 
+  const [uploadProductImage, { isLoading: loadingUpload }] =
+    useUploadProductImageMutation();
+
   useEffect(() => {
     if (product) {
       setName(product.name);
@@ -39,7 +42,7 @@ const ProductEditScreen = () => {
       setImage(product.image);
       setBrand(product.brand);
       setCategory(product.category);
-      setCountInStock(product.setCountInStock);
+      setCountInStock(product.countInStock);
       setDescription(product.description);
     }
   }, [product]);
@@ -62,6 +65,19 @@ const ProductEditScreen = () => {
     } else {
       toast.success("Product updated");
       navigate("/admin/productlist");
+    }
+  };
+
+  const uploadFileHandler = async (e) => {
+    const formData = new FormData();
+    formData.append("image", e.target.files[0]);
+    try {
+      const res = await uploadProductImage(formData).unwrap();
+      toast.success(res.message);
+      setImage(res.image);
+      console.log(res.image);
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
     }
   };
 
@@ -112,6 +128,22 @@ const ProductEditScreen = () => {
           />
           {/* here goes label for image */}
           <label className="mt-1" htmlFor="brand">
+            Image
+          </label>
+          <input
+            type="text"
+            placeholder="enter image url"
+            value={image}
+            className="p-2 border rounded-[0.2rem] outline-none"
+            onChange={(e) => setImage}
+          />
+          <input
+            type="file"
+            placeholder="choose file"
+            className="p-2 border rounded-[0.2rem] outline-none"
+            onChange={uploadFileHandler}
+          />
+          <label className="mt-1" htmlFor="brand">
             Brand
           </label>
           <input
@@ -123,9 +155,11 @@ const ProductEditScreen = () => {
             className="p-2 border rounded-[0.2rem] outline-none"
             onChange={(e) => setBrand(e.target.value)}
           />
+
           <label className="mt-1" htmlFor="count-in-stock">
             Count In Stock
           </label>
+
           <input
             type="number"
             id="count-in-stock"
@@ -135,6 +169,7 @@ const ProductEditScreen = () => {
             className="p-2 border rounded-[0.2rem] outline-none"
             onChange={(e) => setCountInStock(e.target.value)}
           />
+
           <label className="mt-1" htmlFor="category">
             Category
           </label>

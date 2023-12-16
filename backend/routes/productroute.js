@@ -4,6 +4,8 @@ import {
   singleProductCtrl,
   createProductCtrl,
   updateProductCtrl,
+  deleteProductCtrl,
+  createProductReviewCtrl,
 } from "../controllers/productsCtrl.js";
 import { admin, protect } from "../middlewares/authMiddleware.js";
 
@@ -16,6 +18,8 @@ productRoute
 productRoute
   .route("/:id")
   .get(singleProductCtrl)
-  .put(protect, admin, updateProductCtrl);
+  .put(protect, admin, updateProductCtrl)
+  .delete(protect, admin, deleteProductCtrl);
+productRoute.route("/:id/reviews").post(protect, createProductReviewCtrl);
 
 export default productRoute;

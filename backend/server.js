@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import path from "path";
 import connectDB from "./config/connectDB.js";
 import dotenv from "dotenv";
 import productRoute from "./routes/productroute.js";
@@ -7,6 +8,7 @@ import { notFound, errorHandler } from "./middlewares/errorMiddleware.js";
 import userRoute from "./routes/userRoute.js";
 import cookieParser from "cookie-parser";
 import orderRoute from "./routes/orderRoutes.js";
+import uploadRoute from "./routes/uploadRoute.js";
 
 dotenv.config();
 
@@ -40,6 +42,12 @@ app.use("/api/orders", orderRoute);
 app.get("/api/config/paypal", (req, res) =>
   res.send({ clientId: process.env.PAYPAL_CLIENT_ID })
 );
+
+//image upload route
+app.use("/api/upload", uploadRoute);
+
+const __dirname = path.resolve();
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use(notFound);
 app.use(errorHandler);
