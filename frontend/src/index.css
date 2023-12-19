@@ -3,3 +3,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .scroll-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .search-show {
+    transform: translateY(0%);
+    transition: all 0.2s ease;
+  }
+  .menu-show {
+    right: 0;
+    top: 5rem;
+    transition: all 0.5s ease;
+  }
+}

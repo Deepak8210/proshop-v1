@@ -59,7 +59,7 @@ const ProductScreen = () => {
       ) : isError ? (
         <Message error={isError?.data.message || isError.error} />
       ) : (
-        <div className="w-full min-h-screen lg:px-[10%] px-4 mt-8 font-Poppins">
+        <div className="w-full min-h-screen lg:px-[10%] px-4  font-Poppins mt-24">
           <Link
             to={"/"}
             className="bg-slate-200 shadow-md active:scale-95 duration-300 mt-4 text-slate-600 rounded-md py-2 px-4 font-semibold"

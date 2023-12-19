@@ -44,7 +44,7 @@ const RegisterScreen = () => {
     }
   };
   return (
-    <div className="w-full  px-4 lg:px-[7%] font-Poppins">
+    <div className="w-full  px-4 lg:px-[7%] font-Poppins mt-24">
       <h1 className="text-slate-400 font-[500] my-2 text-2xl lg:w-[70%] lg:mx-auto mt-6">
         Sign Up
       </h1>

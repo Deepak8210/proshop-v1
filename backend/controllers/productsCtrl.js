@@ -2,8 +2,20 @@ import Product from "../models/productModel.js";
 import asyncHandler from "../middlewares/asyncHandler.js";
 
 const productsCtrl = asyncHandler(async (req, res) => {
-  const products = await Product.find({});
-  if (products) return res.json(products);
+  const pageSize = 8;
+  const page = Number(req.query.pageNumber) || 1;
+
+  const keyword = req.query.keyword
+    ? { name: { $regex: req.query.keyword, $options: "i" } }
+    : {};
+
+  const count = await Product.countDocuments({ ...keyword });
+
+  const products = await Product.find({ ...keyword })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
+  if (products)
+    return res.json({ products, page, pages: Math.ceil(count / pageSize) });
   else {
     res.status(404);
     throw new Error("Products not found");
@@ -105,6 +117,12 @@ const createProductReviewCtrl = asyncHandler(async (req, res) => {
   }
 });
 
+//get top rated products /api/products/top public
+const getTopProductsCtrl = asyncHandler(async (req, res) => {
+  const products = await Product.find({}).sort({ rating: -1 }).limit(3);
+  res.status(200).json(products);
+});
+
 export {
   productsCtrl,
   singleProductCtrl,
@@ -112,4 +130,5 @@ export {
   updateProductCtrl,
   deleteProductCtrl,
   createProductReviewCtrl,
+  getTopProductsCtrl,
 };

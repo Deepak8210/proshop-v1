@@ -21,7 +21,7 @@ const CartScreen = () => {
     <>
       {" "}
       {cartItems.length < 1 ? (
-        <div className="w-full min-h-[calc(100vh-5rem)] flex items-center flex-col justify-center gap-2 font-Poppins">
+        <div className="w-full min-h-[calc(100vh-5rem)] flex items-center flex-col justify-center gap-2 font-Poppins mt-24">
           <h1 className="text-2xl font-semibold  text-slate-400">
             Your Cart is Empty!
           </h1>
@@ -33,7 +33,7 @@ const CartScreen = () => {
           </button>
         </div>
       ) : (
-        <div className="w-full min-h-screen lg:px-[7%] md:px-4 ">
+        <div className="w-full min-h-screen lg:px-[7%] md:px-4 mt-24 ">
           <h1 className="text-[1.5rem] font-semibold font-Poppins text-slate-500 my-2 px-4">
             Shopping Cart
           </h1>

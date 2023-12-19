@@ -49,7 +49,7 @@ const ProfileScreen = () => {
   };
 
   return (
-    <div className="w-full  px-2 lg:px-[7%] font-Poppins text-slate-400">
+    <div className="w-full  px-2 lg:px-[7%] font-Poppins text-slate-400 mt-24">
       <div className="w-full grid lg:grid-cols-3 mt-4 gap-6">
         <div className=" p-2">
           <h1 className="text-slate-400 font-[500] my-2 text-2xl  mt-6">

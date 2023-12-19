@@ -39,7 +39,7 @@ const PlaceOrderScreen = () => {
     }
   };
   return (
-    <div className="w-full  px-1 md:px-4 lg:px-[7%] font-Poppins">
+    <div className="w-full  px-1 md:px-4 lg:px-[7%] font-Poppins mt-24">
       <CheckoutSteps step1 step2 step3 step4 />
       <div className="w-full grid lg:grid-cols-3 mt-4 gap-6">
         <div className="lg:col-span-2 ">

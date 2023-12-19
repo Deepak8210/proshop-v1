@@ -109,7 +109,7 @@ const OrderScreen = () => {
   ) : isError ? (
     <Message />
   ) : (
-    <div className="w-full  px-4 lg:px-[7%] font-Poppins">
+    <div className="w-full  px-4 lg:px-[7%] font-Poppins mt-24">
       <h1 className="text-slate-400 md:text-2xl text-xl font-[500] mt-4">
         Order {order._id}
       </h1>

@@ -3,15 +3,20 @@ import { FaTimes, FaEdit, FaTrash } from "react-icons/fa";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import { toast } from "react-toastify";
+
 import {
   useCreateProductMutation,
   useGetProductsQuery,
   useDeleteProductMutation,
 } from "../../redux/slices/productApiSlice";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import Paginate from "../../components/Paginate";
 
 const ProductListScreen = () => {
-  const { data: products, isLoading, isError, refetch } = useGetProductsQuery();
+  const { pageNumber } = useParams();
+  const { data, isLoading, isError, refetch } = useGetProductsQuery({
+    pageNumber,
+  });
   const [createProduct, { isLoading: loadingCreate }] =
     useCreateProductMutation();
 
@@ -77,7 +82,7 @@ const ProductListScreen = () => {
                 </tr>
               </thead>
               <tbody>
-                {products.map((product, index) => (
+                {data.products.map((product, index) => (
                   <tr
                     className={`${
                       index % 2 === 0 ? "bg-white" : "bg-gray-100"
@@ -109,7 +114,7 @@ const ProductListScreen = () => {
             </table>
           </div>
 
-          {products.map((product, index) => (
+          {data.products.map((product, index) => (
             <div
               className={`md:hidden border rounded-[0.2rem] text-sm p-1 my-1 ${
                 index % 2 === 0 ? "bg-white" : "bg-gray-100"
@@ -154,6 +159,11 @@ const ProductListScreen = () => {
               </div>
             </div>
           ))}
+          <Paginate
+            currentPage={data.page}
+            totalPages={data.pages}
+            isAdmin={true}
+          />
         </>
       )}
     </div>

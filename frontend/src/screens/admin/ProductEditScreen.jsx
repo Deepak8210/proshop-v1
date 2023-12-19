@@ -82,7 +82,7 @@ const ProductEditScreen = () => {
   };
 
   return (
-    <div className="w-full lg:px-[7%] px-2 pt-4">
+    <div className="w-full lg:px-[7%] px-2 pt-4 mt-24">
       <Link
         to={"/admin/productlist"}
         className="bg-slate-300 text-slate-700 rounded-[0.2rem] py-2 px-3"

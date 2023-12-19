@@ -6,6 +6,7 @@ import {
   updateProductCtrl,
   deleteProductCtrl,
   createProductReviewCtrl,
+  getTopProductsCtrl,
 } from "../controllers/productsCtrl.js";
 import { admin, protect } from "../middlewares/authMiddleware.js";
 
@@ -15,6 +16,7 @@ productRoute
   .route("/")
   .get(productsCtrl)
   .post(protect, admin, createProductCtrl);
+productRoute.get("/top", getTopProductsCtrl);
 productRoute
   .route("/:id")
   .get(singleProductCtrl)

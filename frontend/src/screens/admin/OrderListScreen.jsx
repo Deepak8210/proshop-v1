@@ -9,7 +9,7 @@ const OrderListScreen = () => {
   const { data: orders, isLoading, isError } = useGetOrdersQuery();
 
   return (
-    <div className="w-full lg:px-[7%] px-2">
+    <div className="w-full lg:px-[7%] px-2 mt-24">
       <h1 className="text-slate-400 font-[500] my-2 text-3xl  mt-6">Orders</h1>
       {isLoading ? (
         <Loader />

@@ -20,6 +20,7 @@ import OrderListScreen from "./screens/admin/OrderListScreen";
 import ProductListScreen from "./screens/admin/ProductListScreen";
 import ProductEditScreen from "./screens/admin/ProductEditScreen";
 
+import "@splidejs/react-splide/css";
 function App() {
   return (
     <div className="w-full min-h-screen">
@@ -27,6 +28,12 @@ function App() {
         <Layout>
           <Routes>
             <Route path="/" element={<HomeScreen />} />
+            <Route path="/search/:keyword" element={<HomeScreen />} />
+            <Route path="/page/:pageNumber" element={<HomeScreen />} />
+            <Route
+              path="/search/:keyword/page/:pageNumber"
+              element={<HomeScreen />}
+            />
             <Route path="/product/:id" element={<ProductScreen />} />
             <Route path="/cart" element={<CartScreen />} />
             <Route path="/login" element={<LoginScreen />} />
@@ -46,11 +53,15 @@ function App() {
                 path="/admin/productlist"
                 element={<ProductListScreen />}
               />
+              <Route
+                path="/admin/productlist/:pageNumber"
+                element={<ProductListScreen />}
+              />
+              <Route
+                path="/admin/product/:id/edit"
+                element={<ProductEditScreen />}
+              ></Route>
             </Route>
-            <Route
-              path="/admin/product/:id/edit"
-              element={<ProductEditScreen />}
-            ></Route>
           </Routes>
         </Layout>
       </Router>

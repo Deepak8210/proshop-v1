@@ -14,9 +14,11 @@ const Product = ({ product }) => {
       </Link>
       <Link
         to={`/product/${product._id}`}
-        className="text-sm font-semibold text-slate-600 mt-3"
+        className="text-sm font-semibold text-slate-600 mt-3 "
       >
-        <h3 className="underline ">{product.name}</h3>
+        <h3 className="underline text-ellipsis whitespace-nowrap overflow-hidden">
+          {product.name}
+        </h3>
       </Link>
       <div>
         <Ratings
