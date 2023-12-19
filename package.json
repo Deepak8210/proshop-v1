@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon backend/server.js",
     "di": "node backend/seeders.js",
-    "dd": "node backend/seeders.js -d"
+    "dd": "node backend/seeders.js -d",
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "author": "deepak kumar",
   "license": "ISC",
